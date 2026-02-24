@@ -1,4 +1,5 @@
 {
+"hospitals":{
   "hospital1": [
     {
       "hospital_id": 1,
@@ -17,7 +18,8 @@
         }
       },
       "last_updated": "2026-02-24T10:30:00",
-      "score": null
+      "score": null,
+      "cases": null
     }
   ],
 
@@ -39,7 +41,8 @@
         }
       },
       "last_updated": "2026-01-22T11:29:31",
-      "score": null
+      "score": null,
+      "cases": null
     }
   ],
 
@@ -61,7 +64,8 @@
         }
       },
       "last_updated": "2026-02-20T14:10:45",
-      "score": null
+      "score": null,
+      "cases": null
     }
   ],
 
@@ -83,7 +87,8 @@
         }
       },
       "last_updated": "2026-02-18T09:05:12",
-      "score": null
+      "score": null,
+      "cases": null
     }
   ],
 
@@ -105,7 +110,8 @@
         }
       },
       "last_updated": "2026-02-21T16:42:08",
-      "score": null
+      "score": null,
+      "cases": null
     }
   ],
 
@@ -127,7 +133,19 @@
         }
       },
       "last_updated": "2026-02-23T12:55:30",
-      "score": null
+      "score": null,
+      "cases": null
     }
   ]
+  },
+  "users": {
+  "user1": {
+  "email": "sreehaasbvs@gmail.com",
+  "password": "sreehaas123"
+  },
+  "user2": {
+  "email": "sabareeshvinodh458@gmail.com",
+  "password": "sabareesh"
+  }
+  }
 }

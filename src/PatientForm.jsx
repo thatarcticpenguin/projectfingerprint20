@@ -1,20 +1,7 @@
 // ------- FIREBASE CONFIG ---------
 import { useState } from "react";
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get } from "firebase/database";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBnFvGMImnUQoe8dGtq32Yz-a8_6bMtjFQ",
-  authDomain: "projectyelamudhram.firebaseapp.com",
-  databaseURL: "https://projectyelamudhram-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "projectyelamudhram",
-  storageBucket: "projectyelamudhram.firebasestorage.app",
-  messagingSenderId: "583393678546",
-  appId: "1:583393678546:web:4c877bbfba740ed375890b"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+import { ref, get } from "firebase/database";
+import { db } from "./firebase";
 
 const userLocation = {
   lat: 16.5062,
@@ -46,7 +33,7 @@ export default function PatientForm() {
   const [results, setResults] = useState([]);
 
   async function handleFind() {
-  const snapshot = await get(ref(db, "/"));
+  const snapshot = await get(ref(db, "/hospitals"));
   const data = snapshot.val();
 
   const computed = Object.values(data).map((hospitalArr) => {
@@ -77,11 +64,10 @@ export default function PatientForm() {
       beds,
       icu,
       specialistsOnDuty,
-      score: Number(score)   // 👈 ensure numeric
+      score: Number(score)
     };
   });
 
-  // 🔥 SORT BY SCORE (HIGH → LOW)
   computed.sort((a, b) => b.score - a.score);
 
   setResults(computed);
