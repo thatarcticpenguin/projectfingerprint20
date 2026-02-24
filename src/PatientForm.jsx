@@ -1,20 +1,27 @@
 // ------- FIREBASE CONFIG ---------
-import { useState } from "react";
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get } from "firebase/database";
+import { useState, useEffect } from "react";
+import { ref, get, onValue } from "firebase/database";
+import { db } from "./firebase";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBnFvGMImnUQoe8dGtq32Yz-a8_6bMtjFQ",
-  authDomain: "projectyelamudhram.firebaseapp.com",
-  databaseURL: "https://projectyelamudhram-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "projectyelamudhram",
-  storageBucket: "projectyelamudhram.firebasestorage.app",
-  messagingSenderId: "583393678546",
-  appId: "1:583393678546:web:4c877bbfba740ed375890b"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+// Departments config (UI value + label + Firebase specialists key)
+const DEPARTMENTS = [
+  { value: "general_medicine", label: "General Medicine", dbKey: "general" },
+  { value: "cardiology", label: "Cardiology", dbKey: "cardiac" },
+  { value: "neurology", label: "Neurology", dbKey: "neurology" },
+  { value: "orthopedics", label: "Orthopedics", dbKey: "orthopedic" },
+  { value: "pulmonology", label: "Pulmonology", dbKey: "pulmonology" },
+  { value: "nephrology", label: "Nephrology", dbKey: "nephrology" },
+  { value: "urology", label: "Urology", dbKey: "urology" },
+  { value: "dermatology", label: "Dermatology", dbKey: "dermatology" },
+  { value: "pediatrics", label: "Pediatrics", dbKey: "pediatrics" },
+  { value: "gynecology", label: "Gynecology", dbKey: "gynecology" },
+  { value: "ent", label: "ENT", dbKey: "ent" },
+  { value: "ophthalmology", label: "Ophthalmology", dbKey: "ophthalmology" },
+  { value: "psychiatry", label: "Psychiatry", dbKey: "psychiatry" },
+  { value: "oncology", label: "Oncology", dbKey: "oncology" },
+  { value: "radiology", label: "Radiology", dbKey: "radiology" },
+  { value: "anesthesiology", label: "Anesthesiology", dbKey: "anesthesiology" }
+];
 
 const userLocation = {
   lat: 16.5062,
@@ -42,50 +49,77 @@ function calculateScore(beds, icu, specialists, distance) {
 }
 
 export default function PatientForm() {
-  const [specialist, setSpecialist] = useState("cardiac");
+  const [specialist, setSpecialist] = useState("cardiology");
   const [results, setResults] = useState([]);
+  const [hospitalsSnapshot, setHospitalsSnapshot] = useState(null);
+
+  // 🔁 Live subscription to hospitals for always-fresh data
+  useEffect(() => {
+    const hospitalsRef = ref(db, "/hospitals");
+    const unsubscribe = onValue(hospitalsRef, (snapshot) => {
+      setHospitalsSnapshot(snapshot.val() || {});
+    });
+    return () => unsubscribe();
+  }, []);
 
   async function handleFind() {
-  const snapshot = await get(ref(db, "/"));
-  const data = snapshot.val();
+    const hospitalsData =
+      hospitalsSnapshot ||
+      (await (async () => {
+        const snapshot = await get(ref(db, "/hospitals"));
+        return snapshot.val();
+      })());
 
-  const computed = Object.values(data).map((hospitalArr) => {
-    const hospital = hospitalArr[0];
+    if (!hospitalsData) {
+      setResults([]);
+      return;
+    }
 
-    const beds = hospital.availability.beds;
-    const icu = hospital.availability.icu_beds;
-    const specialistsOnDuty =
-      hospital.availability.specialists[specialist] || 0;
+    const computed = Object.values(hospitalsData)
+      .map((hospitalArr) => {
+        const hospital = Array.isArray(hospitalArr) ? hospitalArr[0] : null;
+        if (!hospital || !hospital.availability) {
+          return null;
+        }
 
-    const dist = distanceKm(
-      userLocation.lat,
-      userLocation.lng,
-      hospital.coordinates.lat,
-      hospital.coordinates.lng
-    );
+        const beds = hospital.availability.beds ?? 0;
+        const icu = hospital.availability.icu_beds ?? 0;
 
-    const score = calculateScore(
-      beds,
-      icu,
-      specialistsOnDuty,
-      dist
-    );
+        const selectedDept = DEPARTMENTS.find((d) => d.value === specialist);
+        const specialistKey = selectedDept?.dbKey ?? specialist;
+        const specialistsOnDuty =
+          (hospital.availability.specialists || {})[specialistKey] || 0;
 
-    return {
-      name: hospital.hospital_name,
-      distance: dist.toFixed(2),
-      beds,
-      icu,
-      specialistsOnDuty,
-      score: Number(score)   // 👈 ensure numeric
-    };
-  });
+        const dist = distanceKm(
+          userLocation.lat,
+          userLocation.lng,
+          hospital.coordinates.lat,
+          hospital.coordinates.lng
+        );
 
-  // 🔥 SORT BY SCORE (HIGH → LOW)
-  computed.sort((a, b) => b.score - a.score);
+        const score = calculateScore(
+          beds,
+          icu,
+          specialistsOnDuty,
+          dist
+        );
 
-  setResults(computed);
-}
+        return {
+          name: hospital.hospital_name,
+          distance: dist.toFixed(2),
+          beds,
+          icu,
+          specialistsOnDuty,
+          score: Number(score)   // 👈 ensure numeric
+        };
+      })
+      .filter(Boolean);
+
+    // 🔥 SORT BY SCORE (HIGH → LOW)
+    computed.sort((a, b) => b.score - a.score);
+
+    setResults(computed);
+  }
 
   return (
     <div style={{ padding: "20px" }}>
@@ -95,11 +129,11 @@ export default function PatientForm() {
         value={specialist}
         onChange={(e) => setSpecialist(e.target.value)}
       >
-        <option value="cardiac">Cardiology</option>
-        <option value="neurology">Neurology</option>
-        <option value="orthopedic">Orthopedics</option>
-        <option value="pediatrics">Pediatrics</option>
-        <option value="pulmonology">Pulmonology</option>
+        {DEPARTMENTS.map((d) => (
+          <option key={d.value} value={d.value}>
+            {d.label}
+          </option>
+        ))}
       </select>
 
       <button onClick={handleFind} style={{ marginLeft: "10px" }}>

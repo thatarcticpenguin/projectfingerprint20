@@ -16,6 +16,10 @@
           "orthopedic": 0
         }
       },
+      "adminaccount": {
+        "ID":"APOVJAC001",
+        "password":"33330000"
+      },
       "last_updated": "2026-02-24T10:30:00",
       "score": null
     }
@@ -37,6 +41,10 @@
           "cardiac": 0,
           "pulmonology": 2
         }
+      },
+        "adminaccount": {
+        "ID":"VIJVJAC001",
+        "password":"324324"
       },
       "last_updated": "2026-01-22T11:29:31",
       "score": null
@@ -60,6 +68,10 @@
           "orthopedic": 2
         }
       },
+      "adminaccount": {
+        "ID":"MANVJAC001",
+        "password":"243000"
+      },
       "last_updated": "2026-02-20T14:10:45",
       "score": null
     }
@@ -81,6 +93,10 @@
           "cardiac": 1,
           "general": 3
         }
+      },
+      "adminaccount": {
+        "ID":"MVIVJAC001",
+        "password":"9275097"
       },
       "last_updated": "2026-02-18T09:05:12",
       "score": null
@@ -104,6 +120,10 @@
           "cardiac": 1
         }
       },
+      "adminaccount": {
+        "ID":"SRIVJAOT001",
+        "password":"0823754"
+      },
       "last_updated": "2026-02-21T16:42:08",
       "score": null
     }
@@ -125,6 +145,10 @@
           "gynecology": 3,
           "neonatology": 2
         }
+      },
+      "adminaccount": {
+        "ID":"ANKVJAKN001",
+        "password":"0923533"
       },
       "last_updated": "2026-02-23T12:55:30",
       "score": null

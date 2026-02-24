@@ -1,0 +1,71 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  scrollbar-gutter: unset; /* nuclear option */
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fullscreen shell */
+.dashboard-tabs-wrapper {
+  position: fixed;
+  inset: 0;
+
+  background: radial-gradient(circle at top, #0a2a52, #020b1c);
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 30px;
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+/* Tabs container */
+.tabs-header {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.tab-btn {
+  padding: 12px 26px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #cfe3ff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(10px);
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #1da1ff, #007bff);
+  color: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 123, 255, 0.45);
+  border: none;
+}
+
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;          /* add this */
+  flex-direction: column; /* add this */
+}
