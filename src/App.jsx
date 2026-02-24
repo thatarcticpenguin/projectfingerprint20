@@ -1,12 +1,15 @@
-import MapView from './MapView'
-import Home from "./pages/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Home";
+import PatientForm from "./PatientForm";
 
 function App() {
   return (
-    <>
-      <MapView />
-      <Home />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/form" element={<PatientForm />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
