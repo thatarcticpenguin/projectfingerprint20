@@ -1,0 +1,24 @@
+{
+    "hospital1": [{
+        "hospital_id": 1,
+        "hospital_name": "Apollo Hospitals, Vijayawada",
+
+        "coordinates": {
+            "lat": 16.521919273418213,
+            "lng": 80.67760935786166
+        },
+
+        "availability": {
+            "beds": 12,
+            "icu_beds": 3,
+            "specialists": {
+                "neurology": 2,
+                "cardiac": 1,
+                "orthopedic": 0
+            }
+        },
+
+        "last_updated": "2025-02-24T10:30:00",
+        "score": null
+    }]
+}
