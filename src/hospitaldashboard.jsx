@@ -36,86 +36,163 @@ export default function HospitalDashboard() {
 
   const [hospitalsSnapshot, setHospitalsSnapshot] = useState(null);
   const [hospitalOptions, setHospitalOptions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [filteredHospitals, setFilteredHospitals] = useState([]);
 
   useEffect(() => {
+    console.log("📱 HospitalDashboard component mounted");
+    console.log("🔗 DB instance:", db);
+    
     const hospitalsRef = ref(db, "/hospitals");
-    const unsubscribe = onValue(hospitalsRef, (snapshot) => {
-      const raw = snapshot.val() || {};
-      setHospitalsSnapshot(raw);
+    console.log("📍 Reading from path: /hospitals");
+    
+    const unsubscribe = onValue(
+      hospitalsRef,
+      (snapshot) => {
+        const raw = snapshot.val();
+        console.log("✅ Firebase snapshot received, exists:", snapshot.exists());
+        console.log("🔥 Firebase data received:", raw);
+        
+        if (!raw) {
+          console.warn("⚠️ No data returned from Firebase");
+          setHospitalOptions([]);
+          return;
+        }
+        
+        setHospitalsSnapshot(raw);
 
-      const opts = Object.entries(raw)
-        .map(([key, arr]) => {
-          const hospital = Array.isArray(arr) ? arr[0] : null;
-          if (!hospital || !hospital.hospital_name) return null;
-          return { key, label: hospital.hospital_name };
-        })
-        .filter(Boolean);
+        const opts = Object.entries(raw)
+          .map(([key, hospital]) => {
+            console.log(`  - Processing ${key}:`, hospital?.hospital_name);
+            if (!hospital || !hospital.hospital_name) {
+              console.warn(`  ⚠️ Skipping ${key}: missing hospital_name`);
+              return null;
+            }
+            return { key, label: hospital.hospital_name };
+          })
+          .filter(Boolean);
 
-      setHospitalOptions(opts);
-    });
-    return () => unsubscribe();
+        console.log("✅ Hospital options parsed:", opts);
+        setHospitalOptions(opts);
+      },
+      (error) => {
+        console.error("❌ Firebase error:", error);
+        console.error("    Code:", error.code);
+        console.error("    Message:", error.message);
+      }
+    );
+    
+    return () => {
+      console.log("🧹 Cleaning up HospitalDashboard");
+      unsubscribe();
+    };
   }, []);
 
   const applyHospitalDataToForm = (hospitalKey, hospitalName, rootData) => {
-    const hospitalArr = rootData?.[hospitalKey];
-    const data = Array.isArray(hospitalArr) ? hospitalArr[0] : null;
-    if (!data) return;
+    console.log(`🏥 applyHospitalDataToForm called for: ${hospitalKey}`);
+    console.log(`📦 rootData keys:`, Object.keys(rootData || {}));
+    
+    const hospital = rootData?.[hospitalKey];
+    console.log(`🔍 Hospital found:`, !!hospital);
+    console.log(`📊 Hospital data:`, hospital);
+    
+    if (!hospital) {
+      console.warn(`⚠️ No hospital data found for key: ${hospitalKey}`);
+      return;
+    }
+
+    console.log(`💾 Hospital availability:`, hospital?.availability);
+    console.log(`👥 Hospital specialists:`, hospital?.availability?.specialists);
 
     setFormData((prev) => {
-      const specialistsFromDb = data?.availability?.specialists || {};
+      const specialistsFromDb = hospital?.availability?.specialists || {};
+      
       const specialistsState = { ...prev.specialists };
 
       DEPARTMENTS.forEach((d) => {
         specialistsState[d.id] = specialistsFromDb[d.dbKey] ?? "";
       });
 
-      return {
+      const newFormData = {
         ...prev,
         hospital: hospitalName,
-        availableBeds: data?.availability?.beds ?? "",
-        icuBeds: data?.availability?.icu_beds ?? "",
-        status: data?.status ?? "Ready",
+        availableBeds: hospital?.availability?.beds ?? "",
+        icuBeds: hospital?.availability?.icu_beds ?? "",
+        status: hospital?.status ?? "Ready",
         specialists: specialistsState
       };
+      
+      console.log("✅ New formData state being set:", {
+        hospital: newFormData.hospital,
+        availableBeds: newFormData.availableBeds,
+        icuBeds: newFormData.icuBeds,
+        status: newFormData.status
+      });
+      return newFormData;
     });
   };
 
   const fetchHospitalData = async (hospitalKey, hospitalName) => {
+    console.log(`🔍 fetchHospitalData called for: ${hospitalKey}`);
+    console.log(`📸 hospitalsSnapshot available:`, !!hospitalsSnapshot);
+    
     if (hospitalsSnapshot) {
+      console.log(`✅ Using cached snapshot, keys:`, Object.keys(hospitalsSnapshot));
+      console.log(`🔑 Looking for key: ${hospitalKey}`);
+      console.log(`📋 Data at key:`, hospitalsSnapshot[hospitalKey]);
       applyHospitalDataToForm(hospitalKey, hospitalName, hospitalsSnapshot);
       return;
     }
 
-    const hospitalRef = ref(db, `/hospitals/${hospitalKey}/0`);
+    console.log(`🌐 Snapshot not cached, fetching from Firebase...`);
+    const hospitalRef = ref(db, `/hospitals/${hospitalKey}`);
     const snapshot = await get(hospitalRef);
+    console.log(`📦 Firebase fetch complete, exists:`, snapshot.exists());
+    
     if (snapshot.exists()) {
       const single = snapshot.val();
+      console.log(`✅ Data fetched from Firebase:`, single);
       applyHospitalDataToForm(hospitalKey, hospitalName, {
-        [hospitalKey]: [single]
+        [hospitalKey]: single
       });
+    } else {
+      console.error(`❌ Hospital data not found at /hospitals/${hospitalKey}`);
     }
   };
 
-  const handleHospitalChange = async (e) => {
+  const handleHospitalChange = (e) => {
     const hospitalName = e.target.value;
-    const hospitalEntry = hospitalOptions.find((h) => h.label === hospitalName);
-    const hospitalKey = hospitalEntry?.key;
-
+    
     setFormData((prev) => ({
       ...prev,
       hospital: hospitalName
     }));
 
-    if (hospitalKey) {
-      await fetchHospitalData(hospitalKey, hospitalName);
+    setShowDropdown(true);
+
+    if (hospitalName.trim() === "") {
+      setFilteredHospitals(hospitalOptions);
+    } else {
+      const filtered = hospitalOptions.filter((h) =>
+        h.label.toLowerCase().includes(hospitalName.toLowerCase())
+      );
+      setFilteredHospitals(filtered);
     }
   };
 
-  const handleHospitalKeyDown = async (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      await handleHospitalChange(e);
-    }
+  const handleHospitalSelect = async (selectedLabel, selectedKey) => {
+    console.log(`👆 Hospital selected: ${selectedLabel} (${selectedKey})`);
+    
+    setFormData((prev) => ({
+      ...prev,
+      hospital: selectedLabel
+    }));
+    setShowDropdown(false);
+    setFilteredHospitals([]);
+    
+    console.log("📡 Fetching hospital data...");
+    await fetchHospitalData(selectedKey, selectedLabel);
+    console.log("✅ Hospital data fetched and form updated");
   };
 
   const handleChange = (e) => {
@@ -148,7 +225,7 @@ export default function HospitalDashboard() {
       return;
     }
 
-    const hospitalRef = ref(db, `/hospitals/${hospitalKey}/0`);
+    const hospitalRef = ref(db, `/hospitals/${hospitalKey}`);
 
     const updates = {
       "availability/beds": Number(formData.availableBeds),
@@ -176,21 +253,68 @@ export default function HospitalDashboard() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Select Hospital</label>
-            <input
-              list="hospital-list"
-              name="hospital"
-              value={formData.hospital}
-              onChange={handleHospitalChange}
-              onKeyDown={handleHospitalKeyDown}
-              autoComplete="off"
-              placeholder="Search and select hospital..."
-              required
-            />
-            <datalist id="hospital-list">
-              {hospitalOptions.map((h) => (
-                <option key={h.key} value={h.label} />
-              ))}
-            </datalist>
+            <div style={{ position: "relative" }}>
+              <input
+                name="hospital"
+                value={formData.hospital}
+                onChange={handleHospitalChange}
+                onFocus={() => {
+                  if (!showDropdown) {
+                    setShowDropdown(true);
+                    if (formData.hospital.trim() === "") {
+                      setFilteredHospitals(hospitalOptions);
+                    }
+                  }
+                }}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                autoComplete="off"
+                placeholder="Search and select hospital..."
+                style={{ width: "100%", boxSizing: "border-box" }}
+                required
+              />
+              {showDropdown && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    background: "white",
+                    border: "1px solid #cbd5e1",
+                    borderTop: "none",
+                    borderRadius: "0 0 8px 8px",
+                    maxHeight: "250px",
+                    overflowY: "auto",
+                    zIndex: 1000,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    marginTop: "-1px"
+                  }}
+                >
+                  {filteredHospitals.length > 0 ? (
+                    filteredHospitals.map((h) => (
+                      <div
+                        key={h.key}
+                        onClick={() => handleHospitalSelect(h.label, h.key)}
+                        style={{
+                          padding: "10px 15px",
+                          cursor: "pointer",
+                          borderBottom: "1px solid #f1f5f9",
+                          transition: "background 0.15s"
+                        }}
+                        onMouseEnter={(e) => (e.target.style.background = "#f0f9ff")}
+                        onMouseLeave={(e) => (e.target.style.background = "transparent")}
+                      >
+                        {h.label}
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ padding: "10px 15px", color: "#94a3b8", textAlign: "center" }}>
+                      {hospitalOptions.length === 0 ? "Loading hospitals..." : "No hospitals found"}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="grid-2">

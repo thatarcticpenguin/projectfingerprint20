@@ -1,157 +1,169 @@
 {
-  "hospital1": [
-    {
-      "hospital_id": 1,
-      "hospital_name": "Apollo Diagnostics, Vijayawada",
-      "coordinates": {
-        "lat": 16.521919273418213,
-        "lng": 80.67760935786166
-      },
-      "availability": {
-        "beds": 12,
-        "icu_beds": 3,
-        "specialists": {
-          "neurology": 2,
-          "cardiac": 1,
-          "orthopedic": 0
-        }
-      },
-      "adminaccount": {
-        "ID":"APOVJAC001",
-        "password":"33330000"
-      },
-      "last_updated": "2026-02-24T10:30:00",
-      "score": null
-    }
-  ],
+    "hospitals": {
+        "hospital1": {
+            "hospital_id": 1,
+            "hospital_name": "Apollo Diagnostics, Vijayawada",
+            "coordinates": {
+                "lat": 16.521919273418213,
+                "lng": 80.67760935786166
+            },
+            "availability": {
+                "beds": 9,
+                "icu_beds": 2,
+                "specialists": {
+                    "cardiac": 1,
+                    "neurology": 2,
+                    "orthopedic": 0
+                }
+            },
+            "adminaccount": {
+                "ID": "APOVJAC001",
+                "password": "33330000"
+            },
+            "status": "Ready",
+            "last_updated": "2026-02-24T09:47:25.716Z",
+            "last_updated_ms": 1771926445716
+        },
 
-  "hospital2": [
-    {
-      "hospital_id": 2,
-      "hospital_name": "Vijaya Super Speciality Hospital, Vijayawada",
-      "coordinates": {
-        "lat": 16.51374938651298,
-        "lng": 80.6372549378246
-      },
-      "availability": {
-        "beds": 7,
-        "icu_beds": 5,
-        "specialists": {
-          "neurology": 1,
-          "cardiac": 0,
-          "pulmonology": 2
-        }
-      },
-        "adminaccount": {
-        "ID":"VIJVJAC001",
-        "password":"324324"
-      },
-      "last_updated": "2026-01-22T11:29:31",
-      "score": null
-    }
-  ],
+        "hospital2": {
+            "hospital_id": 2,
+            "hospital_name": "Vijaya Super Speciality Hospital, Vijayawada",
+            "coordinates": {
+                "lat": 16.51374938651298,
+                "lng": 80.6372549378246
+            },
+            "availability": {
+                "beds": 7,
+                "icu_beds": 5,
+                "specialists": {
+                    "neurology": 1,
+                    "pulmonology": 2
+                }
+            },
+            "adminaccount": {
+                "ID": "VIJVJAC001",
+                "password": "324324"
+            },
+            "status": "Ready",
+            "last_updated": "2026-02-24T10:44:16.718Z",
+            "last_updated_ms": 1771929856718
+        },
 
-  "hospital3": [
-    {
-      "hospital_id": 3,
-      "hospital_name": "Manipal Hospital, Vijayawada",
-      "coordinates": {
-        "lat": 16.4845319831382,
-        "lng": 80.61695894967171
-      },
-      "availability": {
-        "beds": 18,
-        "icu_beds": 6,
-        "specialists": {
-          "neurology": 3,
-          "cardiac": 2,
-          "orthopedic": 2
-        }
-      },
-      "adminaccount": {
-        "ID":"MANVJAC001",
-        "password":"243000"
-      },
-      "last_updated": "2026-02-20T14:10:45",
-      "score": null
-    }
-  ],
+        "hospital3": {
+            "hospital_id": 3,
+            "hospital_name": "Manipal Hospital, Vijayawada",
+            "coordinates": {
+                "lat": 16.4845319831382,
+                "lng": 80.61695894967171
+            },
+            "availability": {
+                "beds": 10,
+                "icu_beds": 6,
+                "specialists": {
+                    "cardiac": 2,
+                    "dermatology": 3,
+                    "neurology": 3,
+                    "orthopedic": 2
+                }
+            },
+            "adminaccount": {
+                "ID": "MANVJAC001",
+                "password": "243000"
+            },
+            "status": "Ready",
+            "last_updated": "2026-02-24T12:45:30.276Z",
+            "last_updated_ms": 1771937130276
+        },
 
-  "hospital4": [
-    {
-      "hospital_id": 4,
-      "hospital_name": "Manvi Hospital, Vijayawada",
-      "coordinates": {
-        "lat": 16.51205751827825,
-        "lng": 80.6332512219896
-      },
-      "availability": {
-        "beds": 9,
-        "icu_beds": 2,
-        "specialists": {
-          "neurology": 0,
-          "cardiac": 1,
-          "general": 3
-        }
-      },
-      "adminaccount": {
-        "ID":"MVIVJAC001",
-        "password":"9275097"
-      },
-      "last_updated": "2026-02-18T09:05:12",
-      "score": null
-    }
-  ],
+        "hospital4": {
+            "hospital_id": 4,
+            "hospital_name": "Manvi Hospital, Vijayawada",
+            "coordinates": {
+                "lat": 16.51205751827825,
+                "lng": 80.6332512219896
+            },
+            "availability": {
+                "beds": 9,
+                "icu_beds": 2,
+                "specialists": {
+                    "cardiac": 1,
+                    "general": 3,
+                    "neurology": 0,
+                    "orthopedic": 2
+                }
+            },
+            "adminaccount": {
+                "ID": "MVIVJAC001",
+                "password": "9275097"
+            },
+            "status": "Ready",
+            "last_updated": "2026-02-24T09:50:35.713Z",
+            "last_updated_ms": 1771926635713
+        },
 
-  "hospital5": [
-    {
-      "hospital_id": 5,
-      "hospital_name": "Srikara Hospitals, Vijayawada",
-      "coordinates": {
-        "lat": 16.502267786279386,
-        "lng": 80.70087692198959
-      },
-      "availability": {
-        "beds": 14,
-        "icu_beds": 4,
-        "specialists": {
-          "orthopedic": 4,
-          "neurology": 1,
-          "cardiac": 1
-        }
-      },
-      "adminaccount": {
-        "ID":"SRIVJAOT001",
-        "password":"0823754"
-      },
-      "last_updated": "2026-02-21T16:42:08",
-      "score": null
-    }
-  ],
+        "hospital5": {
+            "hospital_id": 5,
+            "hospital_name": "Srikara Hospitals, Vijayawada",
+            "coordinates": {
+                "lat": 16.502267786279386,
+                "lng": 80.70087692198959
+            },
+            "availability": {
+                "beds": 7,
+                "icu_beds": 2,
+                "specialists": {
+                    "cardiac": 3,
+                    "neurology": 4,
+                    "orthopedic": 2,
+                    "pulmonology": 7,
+                    "pediatrics": 5
+                }
+            },
+            "adminaccount": {
+                "ID": "SRIVJAOT001",
+                "password": "0823754"
+            },
+            "status": "Ready",
+            "last_updated": "2026-02-24T12:46:10.180Z",
+            "last_updated_ms": 1771937170180
+        },
 
-  "hospital6": [
-    {
-      "hospital_id": 6,
-      "hospital_name": "Ankura Hospital for Children and Women, Vijayawada",
-      "coordinates": {
-        "lat": 16.503335385569546,
-        "lng": 80.65172479315399
-      },
-      "availability": {
-        "beds": 11,
-        "icu_beds": 3,
-        "specialists": {
-          "pediatrics": 4,
-          "gynecology": 3,
-          "neonatology": 2
+        "hospital6": {
+            "hospital_id": 6,
+            "hospital_name": "Ankura Hospital for Children and Women, Vijayawada",
+            "coordinates": {
+                "lat": 16.503335385569546,
+                "lng": 80.65172479315399
+            },
+            "availability": {
+                "beds": 11,
+                "icu_beds": 3,
+                "specialists": {
+                    "neonatology": 2,
+                    "nephrology": 3,
+                    "orthopedic": 6,
+                    "pulmonology": 2,
+                    "urology": 4
+                }
+            },
+            "adminaccount": {
+                "ID": "ANKVJAKN001",
+                "password": "0923533"
+            },
+            "status": "Ready",
+            "last_updated": "2026-02-24T10:07:59.869Z",
+            "last_updated_ms": 1771927679869
         }
-      },
-      "adminaccount": {
-        "ID":"ANKVJAKN001",
-        "password":"0923533"
-      },
-      "last_updated": "2026-02-23T12:55:30",
-      "score": null
+    },
+
+    "users": {
+        "user1": {
+            "email": "sreehaasbvs@gmail.com",
+            "password": "sreehaas123"
+        },
+        "user2": {
+            "email": "sabareeshvinodh458@gmail.com",
+            "password": "sabareesh"
+        }
     }
-  ]
 }
