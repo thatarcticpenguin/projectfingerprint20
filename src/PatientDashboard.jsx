@@ -10,7 +10,7 @@ export default function PatientDashboard({ adminHospital }) {
   useEffect(() => {
     if (!adminHospital?.firebaseKey) return;
 
-    // Read directly from this hospital's patients node
+    
     const patientsRef = ref(db, `hospitals/${adminHospital.firebaseKey}/patients`);
 
     const unsubscribe = onValue(patientsRef, (snapshot) => {
@@ -18,11 +18,11 @@ export default function PatientDashboard({ adminHospital }) {
       if (data) {
         const list = Object.entries(data)
           .map(([id, value]) => ({ id, ...value }))
-          .sort((a, b) => (b.timestamp_ms ?? 0) - (a.timestamp_ms ?? 0)); // newest first
+          .sort((a, b) => (b.timestamp_ms ?? 0) - (a.timestamp_ms ?? 0)); 
 
         setPatients(list);
 
-        // Alert sound on new patient
+        
         if (list.length > previousCount.current) {
           const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
           audio.play().catch(() => {});

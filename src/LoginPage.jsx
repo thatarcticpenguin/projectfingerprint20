@@ -4,53 +4,32 @@ import { db } from "./firebase";
 import { ref, get } from "firebase/database";
 
 const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
   .login-root {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0a0f1e;
-    font-family: 'DM Sans', sans-serif;
+    background: #f0f2f5;
+    font-family: 'Inter', sans-serif;
     overflow: hidden;
     position: relative;
   }
 
-  .login-root::before {
-    content: '';
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(56,113,254,0.18) 0%, transparent 70%);
-    top: -100px;
-    left: -100px;
-    pointer-events: none;
-  }
-
-  .login-root::after {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(130,80,255,0.12) 0%, transparent 70%);
-    bottom: -80px;
-    right: -80px;
-    pointer-events: none;
-  }
+  .login-root::before { display: none; }
+  .login-root::after  { display: none; }
 
   .login-card {
     position: relative;
     z-index: 10;
     width: 420px;
-    background: rgba(14, 21, 42, 0.85);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #e8eaed;
+    border-radius: 16px;
     padding: 48px 44px;
     backdrop-filter: blur(24px);
-    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     animation: cardIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
   }
 
@@ -65,7 +44,7 @@ const styles = `
     font-size: 11px;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: #3871fe;
+    color: #2a2c31ff;
     font-weight: 500;
     margin-bottom: 10px;
     display: flex;
@@ -78,14 +57,14 @@ const styles = `
     display: inline-block;
     width: 20px;
     height: 1px;
-    background: #3871fe;
+    background: #26282cff;
   }
 
   .login-title {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: 600;
-    color: #f0f4ff;
+    color: #0f172a;
     line-height: 1.15;
     margin: 0;
     white-space: pre-line;
@@ -94,7 +73,7 @@ const styles = `
   .login-subtitle {
     margin-top: 8px;
     font-size: 13.5px;
-    color: rgba(180,190,220,0.55);
+    color: #64748b;
     font-weight: 300;
   }
 
@@ -113,7 +92,7 @@ const styles = `
     font-size: 11.5px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: rgba(180,190,220,0.5);
+    color: #475569;
     font-weight: 500;
     margin-bottom: 8px;
   }
@@ -121,10 +100,10 @@ const styles = `
   .field-input {
     width: 100%;
     padding: 13px 16px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
-    color: #e8eeff;
+    color: #0f172a;
     font-family: 'DM Sans', sans-serif;
     font-size: 15px;
     font-weight: 400;
@@ -135,10 +114,10 @@ const styles = `
     appearance: none;
   }
 
-  .field-input::placeholder { color: rgba(180,190,220,0.25); }
+  .field-input::placeholder { color: #94a3b8; }
 
   .field-input:focus {
-    border-color: rgba(56,113,254,0.6);
+    border-color: rgba(40, 42, 46, 0.6);
     background: rgba(56,113,254,0.06);
     box-shadow: 0 0 0 3px rgba(56,113,254,0.1);
   }
@@ -149,9 +128,9 @@ const styles = `
     flex: 1;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.03);
-    color: rgba(180,190,220,0.5);
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
     font-family: 'DM Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
@@ -162,13 +141,13 @@ const styles = `
 
   .role-pill:hover {
     border-color: rgba(56,113,254,0.3);
-    color: rgba(220,228,255,0.8);
+    color: #2a2b2eff;
   }
 
   .role-pill.active {
-    border-color: #3871fe;
-    background: rgba(56,113,254,0.15);
-    color: #7aa3ff;
+    border-color: #353841ff;
+    background: #eff6ff;
+    color: #25282cff;
   }
 
   .btn-primary {
@@ -176,7 +155,7 @@ const styles = `
     padding: 14px;
     border-radius: 10px;
     border: none;
-    background: linear-gradient(135deg, #3871fe 0%, #5a4fff 100%);
+    background: linear-gradient(135deg, #33353aff 0%, #25242bff 100%);
     color: white;
     font-family: 'DM Sans', sans-serif;
     font-size: 15px;
@@ -207,12 +186,12 @@ const styles = `
     content: '';
     flex: 1;
     height: 1px;
-    background: rgba(255,255,255,0.06);
+    background: #e2e8f0;
   }
 
   .divider span {
     font-size: 11px;
-    color: rgba(180,190,220,0.3);
+    color: #94a3b8;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
@@ -220,17 +199,17 @@ const styles = `
   .signup-link {
     text-align: center;
     font-size: 13.5px;
-    color: rgba(180,190,220,0.45);
+    color: #64748b;
   }
 
   .signup-link span {
-    color: #7aa3ff;
+    color: #2c3336ff;
     cursor: pointer;
     font-weight: 500;
     transition: color 0.2s;
   }
 
-  .signup-link span:hover { color: #a8c4ff; }
+  .signup-link span:hover { color: #1f1f20ff; }
 
   .message {
     margin-top: 16px;
@@ -259,14 +238,14 @@ const styles = `
   }
 
   .message.info {
-    background: rgba(56,113,254,0.1);
-    border: 1px solid rgba(56,113,254,0.2);
-    color: #93b4ff;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1f1f20ff;
   }
 
   .otp-hint {
     font-size: 11px;
-    color: rgba(180,190,220,0.3);
+    color: #94a3b8;
     margin-top: 6px;
     text-align: right;
     letter-spacing: 0.5px;
@@ -275,7 +254,7 @@ const styles = `
   .back-btn {
     background: none;
     border: none;
-    color: rgba(180,190,220,0.4);
+    color: #94a3b8;
     font-family: 'DM Sans', sans-serif;
     font-size: 13px;
     cursor: pointer;
@@ -287,7 +266,7 @@ const styles = `
     transition: color 0.2s;
   }
 
-  .back-btn:hover { color: rgba(180,190,220,0.75); }
+  .back-btn:hover { color: #475569; }
 `;
 
 function Login() {

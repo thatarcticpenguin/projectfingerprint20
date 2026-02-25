@@ -35,7 +35,7 @@ export default function HospitalDashboard({ adminHospital }) {
   const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState("");
 
-  // Load this hospital's data from Firebase in real-time
+  
   useEffect(() => {
     if (!adminHospital?.firebaseKey) return;
 
@@ -116,7 +116,7 @@ export default function HospitalDashboard({ adminHospital }) {
         <h2>🏥 {adminHospital.name}</h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Beds */}
+          {}
           <div className="grid-2">
             <div className="form-group">
               <label>Available Beds</label>
@@ -134,7 +134,7 @@ export default function HospitalDashboard({ adminHospital }) {
             </div>
           </div>
 
-          {/* Status */}
+          {}
           <div className="form-group">
             <label>Hospital Status</label>
             <select name="status" value={formData.status} onChange={handleChange}>
@@ -144,7 +144,7 @@ export default function HospitalDashboard({ adminHospital }) {
             </select>
           </div>
 
-          {/* Specialists — label outside input */}
+          {}
           <h4 style={{ marginTop: "24px", marginBottom: "16px" }}>
             Specialists Availability
           </h4>

@@ -6,7 +6,7 @@ import "./navtabs.css";
 export default function DashboardTabs() {
   const [activeTab, setActiveTab] = useState("hospital");
 
-  // Read hospital context set during login
+  
   const adminHospital = JSON.parse(sessionStorage.getItem("adminHospital") || "null");
 
   return (

@@ -8,7 +8,7 @@ import DashboardTabs from "./navtabs";
 import { db } from "./firebase";
 import { ref, onValue } from "firebase/database";
 
-// ─── Firebase → normalised hospital shape ────────────────────────────────────
+
 
 function parseHospitals(data) {
   if (!data) return [];
@@ -21,7 +21,7 @@ function parseHospitals(data) {
     const status          = statusMap[h.status] ?? "green";
     return {
       id:             h.hospital_id,
-      firebaseKey,                        // key used for writing patients
+      firebaseKey,                        
       name:           h.hospital_name,
       lat:            h.coordinates.lat,
       lng:            h.coordinates.lng,
@@ -34,7 +34,7 @@ function parseHospitals(data) {
   });
 }
 
-// ─── Distance & scoring helpers ───────────────────────────────────────────────
+
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R    = 6371;
@@ -48,7 +48,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// Score = beds*0.35 + icu*0.30 + specialists*0.20 + (1/travelTime)*0.15
+
 function scoreHospitals(hospitals) {
   if (!hospitals.length) return [];
   const maxBeds = Math.max(...hospitals.map(h => h.beds), 1);
@@ -65,18 +65,18 @@ function scoreHospitals(hospitals) {
   }).sort((a, b) => b.score - a.score);
 }
 
-// ─── PatientForm wrapper ──────────────────────────────────────────────────────
+
 
 function PatientFormPage() {
   const navigate = useNavigate();
   const handleSearch = (data) => {
-    // data.location is { lat, lng } from GPS
+    
     navigate("/map", { state: { patientData: data } });
   };
   return <PatientForm onSubmit={handleSearch} />;
 }
 
-// ─── Hospital Finder ──────────────────────────────────────────────────────────
+
 
 function HospitalFinder() {
   const [hospitals, setHospitals]               = useState([]);
@@ -88,14 +88,14 @@ function HospitalFinder() {
 
   const location = useLocation();
 
-  // Read patient data (including GPS coords) from router state
+  
   useEffect(() => {
     if (location.state?.patientData) {
       setPatientData(location.state.patientData);
     }
   }, [location.state]);
 
-  // Real-time Firebase hospital feed
+  
   useEffect(() => {
     const hospitalsRef = ref(db, "hospitals");
     const unsub = onValue(hospitalsRef, (snapshot) => {
@@ -108,7 +108,7 @@ function HospitalFinder() {
     return () => unsub();
   }, []);
 
-  // userLocation comes directly from patientData.location (GPS coords from PatientForm)
+  
   const userLocation = useMemo(() => {
     if (patientData?.location?.lat && patientData?.location?.lng) {
       return { lat: patientData.location.lat, lng: patientData.location.lng, heading: null };
@@ -136,7 +136,7 @@ function HospitalFinder() {
 
   const getBarColor = (p) => p > 70 ? "#16a34a" : p > 40 ? "#d97706" : "#dc2626";
 
-  // Loading state
+  
   if (dbLoading || !userLocation) {
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center",
@@ -216,7 +216,7 @@ function HospitalFinder() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+
 
 const cardStyle = (isRecommended) => ({
   padding: "12px", marginBottom: "12px", background: "white",
@@ -238,7 +238,7 @@ const barFill = {
   height: "8px", borderRadius: "4px", transition: "width 0.4s ease",
 };
 
-// ─── Language Switcher ────────────────────────────────────────────────────────
+
 
 function LanguageSwitcher() {
   useEffect(() => {
@@ -270,7 +270,7 @@ function LanguageSwitcher() {
   return <div id="google_translate_element" style={{ minWidth: "160px" }} />;
 }
 
-// ─── Root App ─────────────────────────────────────────────────────────────────
+
 
 function AppInner() {
   const location = useLocation();

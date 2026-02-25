@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-// ── Spin keyframe injected once ──────────────────────────────────────────────
+
 function injectSpinKeyframe() {
   if (document.getElementById("spin-keyframes")) return;
   const style = document.createElement("style");
@@ -15,10 +15,10 @@ const PatientForm = ({ onSubmit }) => {
   const [severity, setSeverity] = useState("critical");
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
-  const [coords, setCoords]     = useState(null);   // { lat, lng }
-  const [locStatus, setLocStatus] = useState("detecting"); // "detecting" | "ready" | "error"
+  const [coords, setCoords]     = useState(null);   
+  const [locStatus, setLocStatus] = useState("detecting"); 
 
-  // Full department → conditions map (mirrors Firebase specialist keys)
+  
   const departmentData = {
     general_medicine:  ["Unknown/Trauma", "Unconscious", "Severe Fever", "Infection", "Dehydration"],
     cardiology:        ["Heart Attack", "Cardiac Arrest", "Chest Pain", "Arrhythmia", "Heart Failure"],
@@ -42,10 +42,10 @@ const PatientForm = ({ onSubmit }) => {
 
   const departments = Object.keys(departmentData);
 
-  // Inject spin animation
+  
   useEffect(() => { injectSpinKeyframe(); }, []);
 
-  // Auto-detect GPS location on mount
+  
   useEffect(() => {
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by your browser.");
@@ -71,7 +71,7 @@ const PatientForm = ({ onSubmit }) => {
     );
   }, []);
 
-  // Reset disease when department changes
+  
   useEffect(() => {
     setDisease(departmentData[dept]?.[0] ?? "");
   }, [dept]);
@@ -85,7 +85,7 @@ const PatientForm = ({ onSubmit }) => {
         dept: "general_medicine",
         disease: "Unknown/Trauma",
         severity: "critical",
-        location: coords,          // { lat, lng }
+        location: coords,          
         isGoldenHour: true,
       });
       setLoading(false);
@@ -98,7 +98,7 @@ const PatientForm = ({ onSubmit }) => {
     setError("");
     setLoading(true);
     setTimeout(() => {
-      onSubmit({ dept, disease, severity, location: coords }); // location is { lat, lng }
+      onSubmit({ dept, disease, severity, location: coords }); 
       setLoading(false);
     }, 1500);
   };
@@ -114,7 +114,7 @@ const PatientForm = ({ onSubmit }) => {
         <span style={{ fontSize: "2rem" }}>🚑</span> Emergency Patient Intake
       </h2>
 
-      {/* Location status banner */}
+      {}
       {locStatus === "detecting" && (
         <div style={{ ...styles.banner, background: "#fef9c3", color: "#92400e", borderColor: "#fde68a" }}>
           <div style={styles.spinner} /> Detecting your location…
@@ -131,7 +131,7 @@ const PatientForm = ({ onSubmit }) => {
         </div>
       )}
 
-      {/* Golden Hour button */}
+      {}
       <button
         type="button"
         onClick={handleInstantRescue}
@@ -142,7 +142,7 @@ const PatientForm = ({ onSubmit }) => {
         🚨 INSTANT RESCUE – GOLDEN HOUR
       </button>
 
-      {/* Regular form */}
+      {}
       <form onSubmit={handleSubmit} style={styles.form}>
         <label htmlFor="department" style={styles.label}>Department</label>
         <select id="department" value={dept} onChange={(e) => setDept(e.target.value)} style={styles.input}>
