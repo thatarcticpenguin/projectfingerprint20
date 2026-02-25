@@ -16,10 +16,11 @@ In medical emergencies, every second saved translates to a life protected. Our p
 ```
 (beds/maxBeds)*0.35 + (icu/maxIcu)*0.30 + (specialists/maxSpec)*0.20 + (1/travelTime)*0.15
 ```
-
+- Comes with translator at Patient Form
+- Para medic can alert the hospital ahead of time so they are prepared for their arrival.
 ## 🎬 Setup Instructions
 - Make sure latest version on `nodejs` and `npm` is installed.
-- Once the above are installed and working, open a terminal clone the repository
+- Once the above are installed and working, open a terminal clone the repository.
 ```
 git clone https://github.com/thatarcticpenguin/projectARS.git
 ```
