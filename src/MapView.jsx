@@ -102,35 +102,49 @@ function Routing({ userLocation, selectedHospital, navigationStarted }) {
   const routingRef = useRef(null)
 
   useEffect(() => {
-    if (!selectedHospital || !userLocation) return
+    if (!selectedHospital || !userLocation) {
+      // Clean up routing when hospital is deselected
+      if (routingRef.current) {
+        map.removeControl(routingRef.current)
+        routingRef.current = null
+      }
+      return
+    }
 
-    if (!routingRef.current) {
-      routingRef.current = L.Routing.control({
-        waypoints: [
-          L.latLng(userLocation.lat, userLocation.lng),
-          L.latLng(selectedHospital.lat, selectedHospital.lng)
-        ],
-        router: L.Routing.osrmv1({
-          serviceUrl: "https://router.project-osrm.org/route/v1"
-          // Note: This uses the OSRM demo server, which logs a warning in console.
-          // For hackathon demos, this is fine—it's free and quick. Ignore the warning;
-          // it won't affect app functionality or visibility to judges.
-        }),
-        lineOptions: {
-          styles: [{ color: "#2563eb", weight: 6 }]
-        },
-        addWaypoints: false,
-        draggableWaypoints: false,
-        createMarker: () => null,
-        show: navigationStarted
-      }).on('routingerror', (e) => {
-        console.error('Routing error:', e.error)
-      }).addTo(map)
-    } else {
-      routingRef.current.setWaypoints([
+    // Remove old routing control if it exists
+    if (routingRef.current) {
+      map.removeControl(routingRef.current)
+      routingRef.current = null
+    }
+
+    // Create new routing control
+    routingRef.current = L.Routing.control({
+      waypoints: [
         L.latLng(userLocation.lat, userLocation.lng),
         L.latLng(selectedHospital.lat, selectedHospital.lng)
-      ])
+      ],
+      router: L.Routing.osrmv1({
+        serviceUrl: "https://router.project-osrm.org/route/v1"
+        // Note: This uses the OSRM demo server, which logs a warning in console.
+        // For hackathon demos, this is fine—it's free and quick. Ignore the warning;
+        // it won't affect app functionality or visibility to judges.
+      }),
+      lineOptions: {
+        styles: [{ color: "#2563eb", weight: 6 }]
+      },
+      addWaypoints: false,
+      draggableWaypoints: false,
+      createMarker: () => null,
+      show: navigationStarted
+    }).on('routingerror', (e) => {
+      console.error('Routing error:', e.error)
+    }).addTo(map)
+
+    return () => {
+      if (routingRef.current) {
+        map.removeControl(routingRef.current)
+        routingRef.current = null
+      }
     }
   }, [selectedHospital, userLocation, navigationStarted, map])
 
@@ -235,6 +249,12 @@ function MapView({
             icon={hospitalIcon(h.status)}
             ref={(ref) => {
               if (ref) markerRefs.current[h.id] = ref
+            }}
+            eventHandlers={{
+              click: () => {
+                setSelectedHospital(h)
+                setNavigationStarted(false)
+              }
             }}
           >
             <Popup>
